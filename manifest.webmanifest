@@ -1,7 +1,7 @@
 {
-  "name": "현장체험 평가단 신고",
-  "short_name": "평가단 신고",
-  "description": "민자철도 현장체험 평가단 신고 및 조치 확인 (시제품)",
+  "name": "현장체험 평가단 운영시스템",
+  "short_name": "평가단",
+  "description": "민자철도 현장체험 평가단 운영시스템 (시제품)",
   "lang": "ko",
   "start_url": "./",
   "scope": "./",
