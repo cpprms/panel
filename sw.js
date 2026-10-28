@@ -1,0 +1,22 @@
+// 현장체험 평가단 신고 시제품 서비스 워커 v1.0 (2026-10-28)
+// 화면 파일은 네트워크 우선(최신 화면 표시), 연결이 끊기면 저장해 둔 화면 표시. 데이터(/api)는 저장하지 않음.
+const CACHE = 'panel-v1';
+const SHELL = ['./', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
+
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
+});
+self.addEventListener('activate', e => {
+  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
+});
+self.addEventListener('fetch', e => {
+  const url = new URL(e.request.url);
+  if (e.request.method !== 'GET' || url.origin !== location.origin || url.pathname.startsWith('/api/')) return;
+  e.respondWith(
+    fetch(e.request).then(res => {
+      const copy = res.clone();
+      caches.open(CACHE).then(c => c.put(e.request, copy));
+      return res;
+    }).catch(() => caches.match(e.request).then(r => r || caches.match('./')))
+  );
+});
