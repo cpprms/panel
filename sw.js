@@ -1,4 +1,4 @@
-// 현장체험 평가단 신고 시제품 서비스 워커 v1.0 (2026-10-28)
+// 현장체험 평가단 신고 시제품 서비스 워커 v1.1 (2026-10-28) 기기 알림을 누르면 열려 있는 앱 화면으로 이동, 없으면 새로 열기
 // 화면 파일은 네트워크 우선(최신 화면 표시), 연결이 끊기면 저장해 둔 화면 표시. 데이터(/api)는 저장하지 않음.
 const CACHE = 'panel-v1';
 const SHELL = ['./', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
@@ -19,4 +19,12 @@ self.addEventListener('fetch', e => {
       return res;
     }).catch(() => caches.match(e.request).then(r => r || caches.match('./')))
   );
+});
+
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(cs => {
+    const c = cs.find(x => 'focus' in x);
+    return c ? c.focus() : self.clients.openWindow('./');
+  }));
 });
