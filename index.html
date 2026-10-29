@@ -23,7 +23,7 @@
         모바일 대응: 센터, SPC 목록을 휴대폰에서 행 단위 블록으로 표시(가로 잘림 해소), 상세는 목록 대신 한 화면으로 열고 [목록] 버튼으로 복귀,
         노선별 집계표 가로 스크롤(노선명 고정), 터치 영역 44px, 시제품 표시와 초기화는 화면 하단으로 이동.
   v1.7 (2026-10-28) 계정 변경: 평가단 노선별 1개(서해선_test, 신분당선_test, 공항철도_test, GTX-A_test), SPC(spc_sh, spc_sbd, spc_arex, spc_gtxa),
-        센터(CENTER), 비밀번호 모두 1234. 로그인 화면의 시연용 계정 목록과 운영 안내 문구 삭제. 저장 키 변경(예시 데이터 새로 생성).
+        센터(CENTER). 로그인 화면의 시연용 계정 목록과 운영 안내 문구 삭제. 저장 키 변경(예시 데이터 새로 생성).
         화면 형식을 CPPRMS 이용통계 분석(SFR-014) 화면에 맞춤: 왼쪽 경로와 큰 제목, 아이콘 요약 카드, 아이콘 제목 패널, 하늘색 강조(#0284c7),
         상태 표시를 점이 있는 둥근 표시로. 평가단 앱: 하단 메뉴 5개(홈, 확인 요청, 신고, 만족도, 내 정보)와 가운데 신고 버튼 강조,
         선택 메뉴 아이콘 배경 표시, 홈 활동 현황 카드와 바로가기, 신고 유형 아이콘 카드, 사진 촬영 영역, 휴대폰에서는 CPPRMS 헤더 숨김(앱 화면만 표시).
@@ -71,6 +71,10 @@
         화면 안 맨 위 고정으로 변경, 앱 복귀, 사진 선택 취소, 화면 크기 변화 때 밀린 화면(visualViewport 포함) 원위치.
   v3.6 (2026-10-28) 신고 사진 최대 5장: 카메라 촬영과 앨범 선택 모두 여러 번 추가, 앨범은 한 번에 여러 장 선택, 장마다 삭제, 5장이면 추가 버튼 잠금과 안내,
         장마다 압축(640px)과 HEIC 변환, 합계가 크면 한 번 더 축소. 평가단, SPC, 센터 상세에서 여러 장 표시와 크게 보기. 기존 1장 신고 호환.
+  v3.8 (2026-10-28) 공유 저장소 보안: Firebase 로그인(이메일/비밀번호, 아이디@panel.local)으로 전환, 권한과 노선은 users 문서 기준.
+        평가단은 본인 신고와 본인 만족도만, SPC는 자기 노선 신고만 받아옴(보안 규칙과 같은 범위로 조회). 확인 요청은 본인 신고만.
+        신고, 조치 계획, 조치 완료, 현장 확인, 종결 일시와 처리 이력 일시를 서버 시각(serverTimestamp)으로 기록, 처리 이력은 추가 전용(h000, h001 ...).
+        지연 판단의 현재 시각도 서버 시각 기준(로그인 시 서버와 기기 시계 차이 보정). 동영상 조각에 노선, 평가단 표시. 공유 저장소에서는 예시 데이터 초기화 숨김.
   v3.7 (2026-10-28) 신고 동영상 1개(최대 20초): 앱 안 촬영(720p, 1.5Mbps, MP4 지원 기기는 MP4, 아니면 WebM, 20초 약 4MB),
         앨범 영상은 20초, 10MB 이하만(다시 압축하지 않음), 미리보기, 삭제, 평가단, SPC, 센터 상세 재생. 시제품 저장소는 0.9MB 조각 저장, 재생할 때만 받음.
         공지 목록은 공지 문서만 받도록 변경(동영상 조각 제외). 동영상 재생 중에는 화면 다시 그리기 보류.
@@ -596,7 +600,7 @@ img.zoom{cursor:zoom-in}
 <body>
 <header class="hd"><div class="hd-in"><span class="logo"><img src="data:image/png;base64,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" alt="CPPR 민자철도 운영관리시스템"><img class="koti" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALwAAAAgCAYAAACo7RKTAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyNpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQ4IDc5LjE2NDAzNiwgMjAxOS8wOC8xMy0wMTowNjo1NyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIDIxLjAgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjQ2MkJBRUNFRTI3QzExRURCMEYyOUM5REIzMDk5RjQyIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjQ2MkJBRUNGRTI3QzExRURCMEYyOUM5REIzMDk5RjQyIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6NDYyQkFFQ0NFMjdDMTFFREIwRjI5QzlEQjMwOTlGNDIiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6NDYyQkFFQ0RFMjdDMTFFREIwRjI5QzlEQjMwOTlGNDIiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4lML+fAAAL2klEQVR42uxcC3RV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" alt="한국교통연구원"></span><nav class="gnb" id="gnb" aria-label="주 메뉴"></nav><div class="util" id="who"></div></div></header>
 <div id="app"></div>
-<div class="foot" id="foot"><span id="envTag"></span>v3.7 (2026-10-28) <button id="rstBtn" onclick="resetAll()">예시 데이터 초기화</button></div>
+<div class="foot" id="foot"><span id="envTag"></span>v3.8 (2026-10-28) <button id="rstBtn" onclick="resetAll()">예시 데이터 초기화</button></div>
 <div id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -620,8 +624,8 @@ const CATS=[
 const CODES={'서해선':['test_sh'],'신분당선':['test_sbd'],'공항철도':['test_arex'],'GTX-A':['test_gtxa']};
 const ALLCODES=Object.values(CODES).flat();
 const lineOf=code=>Object.keys(CODES).find(l=>CODES[l].includes(code));
-/* 시연용 계정: 평가단 코드는 위탁업체 발급, SPC와 센터는 담당자 계정 (비밀번호 공통 1234, 실제는 개별 발급) */
-const DEMO_PIN='1234';
+/* 계정 목록: 표시 이름용. 로그인과 권한은 Firebase 로그인과 users 문서 기준 (비밀번호는 코드에 없음) */
+const DEMO_PIN=null;
 const SPC_ID={'서해선':'spc_sh','신분당선':'spc_sbd','공항철도':'spc_arex','GTX-A':'spc_gtxa'};
 const ACC=[...ALLCODES.map(c=>({id:c,role:'r',line:lineOf(c),name:'평가단 '+c})),
   ...Object.keys(LINES).map(l=>({id:SPC_ID[l],role:'s',line:l,name:LINES[l].spc+' 담당자 ('+l+')'})),
@@ -633,6 +637,8 @@ const REJECTS=['평가 대상 외 (단순 청소, 분실물, 문의 등)','중�
 const KEY='cpprms_mystery_v3';
 let DB, UI={me:null,view:'r', rCode:'test_sh', rTab:'home', rDetail:null, sLine:'서해선', sSel:null, cTab:'ev', cSel:null, cLine:'', cStat:'', cLate:false};
 const H=3600e3, D=24*H;
+const AUTH_DOMAIN='panel.local'; // 공유 저장소 로그인: 아이디@panel.local
+let SKEW=0; const nowS=()=>Date.now()+SKEW; // 서버 시각 = 기기 시각 + 차이(로그인 시 측정)
 /* 서버 주소로 열면 시험 서버와 공유, 파일로 열면 이 브라우저에만 저장 */
 const FBCFG={apiKey:"AIzaSyBotyqFf4jB0MDv4BrZMPZYLjfg7Xr8doE",authDomain:"cpprms-panel-test.firebaseapp.com",projectId:"cpprms-panel-test",storageBucket:"cpprms-panel-test.firebasestorage.app",messagingSenderId:"686890274961",appId:"1:686890274961:web:a0610a53f918b58a46ef30"}; // GitHub Pages 게시본: Firestore 공유 저장소
 const ARTDB=!!FBCFG; // true면 공유 저장소 사용 (Firestore 또는 claude.ai 아티팩트 저장소)
@@ -652,11 +658,12 @@ const plain=o=>JSON.parse(JSON.stringify(o));
 /* Firestore 연결: 아티팩트 저장소와 같은 사용 방식(collection, doc, onSnapshot)으로 감싸서 사용 */
 async function fsDb(){
   const B='https://www.gstatic.com/firebasejs/10.14.1/';
-  const [A,F]=await Promise.all([import(B+'firebase-app.js'),import(B+'firebase-firestore.js')]);
-  const db=F.getFirestore(A.initializeApp(FBCFG));
+  const [A,F,Au]=await Promise.all([import(B+'firebase-app.js'),import(B+'firebase-firestore.js'),import(B+'firebase-auth.js')]);
+  const app=A.initializeApp(FBCFG), db=F.getFirestore(app), auth=Au.getAuth(app);
+  if(window.FB_EMU){ F.connectFirestoreEmulator(db,'127.0.0.1',8080); Au.connectAuthEmulator(auth,'http://127.0.0.1:9099',{disableWarnings:true}); }
   const wrap=s=>({exists:s.exists(),data:()=>s.data()});
   const docApi=ref=>({ref,get:async()=>wrap(await F.getDoc(ref)),set:o=>F.setDoc(ref,o),del:()=>F.deleteDoc(ref)});
-  return {F,db,
+  return {F,db,Au,auth,
     collection:n=>({doc:id=>docApi(F.doc(db,n,id)),onSnapshot:(cb,err)=>F.onSnapshot(F.collection(db,n),s=>cb({docs:s.docs}),err)}),
     doc:p=>docApi(F.doc(db,p))};
 }
@@ -669,12 +676,28 @@ async function fsSeed(force){
   await F.runTransaction(db,async t=>{ const fl=F.doc(db,'meta','noticeflag'); const c=await t.get(fl); if(c.exists()) return;
     seedNotice().forEach(n=>t.set(F.doc(db,'meta',n.id),plain(n))); t.set(fl,{type:'flag'}); });
 }
-/* 공유 저장소 저장: 내가 본 버전(rev)과 저장소 버전이 다르면 다른 사용자가 먼저 처리한 것 */
+/* Firestore 시각(서버 기록)은 화면에서 숫자(ms)로, 처리 이력은 추가 전용 맵(h000, h001 ...)을 배열로 바꿔 사용 */
+const tsMs=v=>v&&typeof v.toMillis==='function'?v.toMillis():v;
+const HK=i=>'h'+String(i).padStart(3,'0');
+function fromFs(o){ const x={...o};
+  if(x.t&&typeof x.t==='object'&&!x.t.toMillis){ const t={}; for(const k in x.t) t[k]=tsMs(x.t[k]); x.t=t; } else if(x.t) x.t=tsMs(x.t);
+  if(x.tu) x.tu=tsMs(x.tu);
+  if(x.hist&&!Array.isArray(x.hist)) x.hist=Object.keys(x.hist).sort().map(k=>({...x.hist[k],t:tsMs(x.hist[k].t),k}));
+  return plain(x); }
+const fsData=d=>fromFs(d.data({serverTimestamps:'estimate'}));
+/* 공유 저장소 저장: 내가 본 버전(rev)과 저장소 버전이 다르면 다른 사용자가 먼저 처리한 것
+   바뀐 항목만 보내고, 새 단계 일시와 새 이력은 서버 시각으로 기록 (보안 규칙이 이 방식만 허용) */
 async function adbSave(e){
   const base=e.rev||0;
-  if(ADB.F){ const {F,db}=ADB, ref=F.doc(db,'ev',e.id);
-    try{ const cur=await F.runTransaction(db,async t=>{ const c=await t.get(ref); if(c.exists()&&(c.data().rev||0)!==base) return c.data(); t.set(ref,plain({...e,rev:base+1})); return null; });
-      if(cur){ const i=DB.ev.findIndex(x=>x.id===e.id); if(i>=0) DB.ev[i]=plain(cur); render(); tst('다른 사용자가 먼저 처리함, 최신 상태로 갱신'); } else e.rev=base+1;
+  if(ADB.F){ const {F,db}=ADB, ref=F.doc(db,'ev',e.id), TS=F.serverTimestamp;
+    try{ const cur=await F.runTransaction(db,async t=>{ const c=await t.get(ref); if(!c.exists()) throw {code:'not-found'};
+        const old=fromFs(c.data()); if((old.rev||0)!==base) return old;
+        const p={rev:base+1};
+        for(const k in e){ if(['id','t','hist','rev'].includes(k)) continue; if(JSON.stringify(e[k]??null)!==JSON.stringify(old[k]??null)) p[k]=e[k]==null?null:plain(e[k]); }
+        for(const k in e.t){ if((e.t[k]??null)!==(old.t[k]??null)) p['t.'+k]=e.t[k]==null?null:TS(); }
+        e.hist.slice(old.hist.length).forEach((x,i)=>{ const {k,...y}=x; p['hist.'+HK(old.hist.length+i)]={...plain(y),t:TS()}; });
+        t.update(ref,p); return null; });
+      if(cur){ const i=DB.ev.findIndex(x=>x.id===e.id); if(i>=0) DB.ev[i]=cur; render(); tst('다른 사용자가 먼저 처리함, 최신 상태로 갱신'); } else e.rev=base+1;
     }catch(err){ tst('저장 실패 ('+(err&&err.code||'연결 확인 필요')+')'); }
     return; }
   try{ const ref=ADB.collection('ev').doc(e.id); const cur=await ref.get();
@@ -686,8 +709,9 @@ async function adbSave(e){
 async function adbNew(e){
   if(ADB.F){ const {F,db}=ADB, cref=F.doc(db,'meta','counter');
     return F.runTransaction(db,async t=>{ const c=await t.get(cref); const seq=((c.exists()&&c.data().seq)||0)+1;
-      const now=Date.now(); e.id='EV-'+fmtYM(now)+'-'+String(seq).padStart(4,'0'); e.t.rep=now; e.t.acc=now; e.hist.forEach(h=>h.t=now); e.rev=0;
-      t.set(cref,{seq}); t.set(F.doc(db,'ev',e.id),plain(e)); return e; }); }
+      const now=nowS(); e.id='EV-'+fmtYM(now)+'-'+String(seq).padStart(4,'0'); e.t.rep=now; e.t.acc=now; e.hist.forEach(h=>h.t=now); e.rev=0;
+      const d=plain(e), TS=F.serverTimestamp; d.t={rep:TS(),acc:TS()}; d.hist={}; e.hist.forEach((x,i)=>{ d.hist[HK(i)]={...plain(x),t:TS()}; });
+      t.set(cref,{seq}); t.set(F.doc(db,'ev',e.id),d); return e; }); }
   const ref=ADB.doc('meta/counter'), holder=Math.random().toString(36).slice(2);
   for(let i=0;i<20;i++){
     const a=await ref.acquire({holder,ttlMs:5000});
@@ -714,13 +738,13 @@ function save(e){
 function busy(){ if(!UI.me) return true; if(VPLAYING) return true; const a=document.activeElement; if(a&&(a.tagName==='TEXTAREA'||(a.tagName==='INPUT'&&a.type!=='checkbox')||a.tagName==='SELECT')) return true; return UI.view==='r'&&((UI.rTab==='new'&&!UI.rDetail)||!!UI.rEdit); }
 async function poll(){ const r=await api('GET','/api/state'); if(r.ok&&r.j.ev&&r.j.rev!==DB.rev&&!busy()){ DB=r.j; render(); } }
 async function init(){
-  restoreMe(); if(UI.me) askCheck();
-  if(UI.me&&UI.me.role==='r'){ const dr=loadDraft(); if(dr){ UI.rTab='new'; UI.rEdit=dr.edit||null; DRAFT_RESTORED=true; } }
+  if(!FBCFG){ restoreMe(); if(UI.me) askCheck(); draftCheck(); }
   if(ARTDB){
-    if(!FBCFG) $('rstBtn').hidden=true;
-    DB={ev:[],sat:[],seq:0,notice:[]}; render();
-    try{ ADB=FBCFG?await fsDb():await claude.use('db'); if(FBCFG) await fsSeed(false); }catch(err){ ADB=null; }
-    if(!ADB){ DATA_READY=true; tst('공유 저장소 연결 불가, 이 기기에만 저장'); load(); render(); return; }
+    $('rstBtn').hidden=true;
+    DB={ev:[],sat:[],seq:0,notice:[]}; if(FBCFG) UI.authWait=true; render();
+    try{ ADB=FBCFG?await fsDb():await claude.use('db'); }catch(err){ ADB=null; }
+    if(!ADB){ UI.authWait=false; DATA_READY=true; if(FBCFG){ render(); tst('서버 연결 불가, 인터넷 연결 확인 후 새로고침'); return; } tst('공유 저장소 연결 불가, 이 기기에만 저장'); load(); render(); return; }
+    if(ADB.Au){ ADB.Au.onAuthStateChanged(ADB.auth,authChanged); return; }
     if(!FBCFG) $('envTag').textContent='공유 데이터 / 실시간 반영';
     const got={}; const ready=k=>{ got[k]=1; if(!DATA_READY&&got.ev&&got.meta){ DATA_READY=true; } };
     ADB.collection('ev').onSnapshot(sn=>{ DB.ev=sn.docs.map(d=>plain(d.data())); ready('ev'); refresh(); }, ()=>tst('공유 데이터 연결 끊김, 새로고침 필요'));
@@ -735,6 +759,32 @@ async function init(){
     if(r.ok&&r.j.ev) DB=r.j; else { const x=await api('POST','/api/reset',seed()); DB=x.j; }
     render(); setInterval(poll,4000);
   } else { load(); render(); }
+}
+function draftCheck(){ if(UI.me&&UI.me.role==='r'){ const dr=loadDraft(); if(dr){ UI.rTab='new'; UI.rEdit=dr.edit||null; DRAFT_RESTORED=true; } } }
+/* 공유 저장소 로그인 상태: 계정 권한 문서(users)로 역할과 노선 확인 후 권한 범위만 조회 */
+let UNSUB=[];
+async function authChanged(u){
+  const {F,db}=ADB;
+  if(!u){ fsStop(); UI.me=null; UI.authWait=false; render(); return; }
+  try{
+    const ref=F.doc(db,'users',u.uid), s=await F.getDoc(ref); if(!s.exists()) throw {code:'no-role'};
+    const d=s.data(), a=ACC.find(x=>x.id===d.id)||{name:d.id};
+    UI.me={...a,id:d.id,role:d.role,line:d.line||''};
+    const t0=Date.now(); await F.updateDoc(ref,{seen:F.serverTimestamp()}); const t1=Date.now();
+    const s2=await F.getDoc(ref); if(s2.data().seen) SKEW=s2.data().seen.toMillis()-(t0+t1)/2;
+  }catch(err){ UI.me=null; UI.authWait=false; try{ await ADB.Au.signOut(ADB.auth); }catch(e){} render(); tst(err&&err.code==='no-role'?'계정 권한 정보 없음, 센터에 문의':'로그인 정보 확인 실패, 다시 로그인'); return; }
+  UI.authWait=false; const fresh=UI.loginJust; UI.loginJust=false;
+  if(fresh){ UI.rTab='home'; UI.rDetail=UI.sSel=UI.cSel=null; } else draftCheck();
+  askCheck(); fsListen(); render(); if(fresh){ window.scrollTo(0,0); if(!UI.askNoti) tst(UI.me.name+' 로그인'); }
+}
+function fsStop(){ UNSUB.forEach(f=>{ try{ f(); }catch(e){} }); UNSUB=[]; DATA_READY=false; NSEEN=null; if(DB){ DB.ev=[]; DB.sat=[]; DB.notice=[]; } }
+function fsListen(){
+  fsStop(); const {F,db}=ADB, me=UI.me, col=n=>F.collection(db,n), lost=()=>tst('공유 데이터 연결 끊김, 새로고침 필요');
+  const own=n=>me.role==='c'?col(n):F.query(col(n),me.role==='s'?F.where('line','==',me.line):F.where('code','==',me.id));
+  const got={}; const ready=k=>{ got[k]=1; if(!DATA_READY&&got.ev&&got.meta){ DATA_READY=true; } };
+  UNSUB.push(F.onSnapshot(own('ev'),sn=>{ DB.ev=sn.docs.map(fsData); ready('ev'); refresh(); },lost));
+  if(me.role!=='s') UNSUB.push(F.onSnapshot(own('sat'),sn=>{ DB.sat=sn.docs.map(fsData); refresh(); },()=>{}));
+  UNSUB.push(F.onSnapshot(F.query(col('meta'),F.where('type','==','notice')),sn=>{ DB.notice=sn.docs.map(fsData); ready('meta'); refresh(); },()=>{}));
 }
 function load(){ try{ const s=localStorage.getItem(KEY); if(s){ DB=JSON.parse(s); DB.notice=DB.notice||seedNotice(); return; } }catch(e){} DB=seed(); save(); }
 function resetAll(){
@@ -802,12 +852,12 @@ function dueOf(e){ const c=catOf(e.cat); const d=new Date(e.t.rep); if(c.days===
 const isOpen=e=>!['종결','반려','확인완료'].includes(e.status);
 /* 처리 완료 시점: 평가단이 개선을 확인한 조치의 완료 일시 (평가단 확인이 늦어도 SPC 지연으로 보지 않음)
    지연: 처리 완료 시점(미완료면 현재 시각)이 기한을 넘긴 건. 확인 대기 중이면 조치 완료 일시 기준 */
-function endOf(e){ if(e.t.done&&(e.status==='조치완료'||(e.check&&e.check.ok))) return e.t.done; return Date.now(); }
+function endOf(e){ if(e.t.done&&(e.status==='조치완료'||(e.check&&e.check.ok))) return e.t.done; return nowS(); }
 function isLate(e){ if(e.status==='반려') return false; return endOf(e)>dueOf(e); }
 function spanH(e){ return (e.check&&e.check.ok&&e.t.done)? (e.t.done-e.t.rep)/H : null; }
 function fmtSpan(h){ if(h==null) return '-'; if(h<24) return Math.max(1,Math.round(h))+'시간'; return (h/24).toFixed(1)+'일'; }
 function chipHtml(e){ const map={'신고':'조치 대기','접수':'조치 대기','조치완료':'확인 대기','확인완료':'종결 대기','반려':'평가 제외'}; return '<span class="chips"><span class="chip s-'+e.status+'">'+(map[e.status]||e.status)+'</span>'+(isLate(e)&&e.status!=='반려'?'<span class="chip late">지연</span>':'')+'</span>'; }
-function addHist(e,who,what,by){ const h={t:Date.now(),who,what}; if(by) h.by=by; e.hist.push(h); }
+function addHist(e,who,what,by){ const h={t:nowS(),who,what}; if(by) h.by=by; e.hist.push(h); }
 function findEv(id){ return DB.ev.find(e=>e.id===id); }
 
 /* ===== 공통 ===== */
@@ -968,7 +1018,7 @@ async function uploadVideo(v,prog){
   const meta={key,type:v.type,size:v.size,dur:v.dur?Math.round(v.dur*10)/10:null,poster:v.poster||null};
   if(!(ADB&&ADB.F)){ LOCALVID[key]=v.blob; meta.local=true; return meta; }
   const {F,db}=ADB, buf=new Uint8Array(await v.blob.arrayBuffer()), n=Math.ceil(buf.length/VCHUNK); meta.n=n;
-  for(let i=0;i<n;i++){ if(prog) prog(i+1,n); await F.setDoc(F.doc(db,'meta','vid_'+key+'_'+i),{type:'vchunk',key,i,n,data:F.Bytes.fromUint8Array(buf.subarray(i*VCHUNK,(i+1)*VCHUNK))}); }
+  for(let i=0;i<n;i++){ if(prog) prog(i+1,n); await F.setDoc(F.doc(db,'meta','vid_'+key+'_'+i),{type:'vchunk',key,i,n,code:UI.rCode,line:lineOf(UI.rCode),data:F.Bytes.fromUint8Array(buf.subarray(i*VCHUNK,(i+1)*VCHUNK))}); }
   return meta;
 }
 function deleteVideo(m){ if(!m||m.local||!(ADB&&ADB.F)) return; const {F,db}=ADB; for(let i=0;i<(m.n||0);i++) F.deleteDoc(F.doc(db,'meta','vid_'+m.key+'_'+i)).catch(()=>{}); }
@@ -1041,6 +1091,7 @@ function render(){
   const pb=$('pb'), pbTop=pb?pb.scrollTop:0, winY=window.scrollY, nl=document.querySelector('.np ul'), nlTop=nl?nl.scrollTop:0;
   notiCheck(); renderHead(); navSync();
   document.body.classList.toggle('has-phone',!!me&&me.role==='r');
+  if(!me&&UI.authWait){ $('app').innerHTML='<div class="login"><div class="lsub" role="status">로그인 확인 중</div></div>'; LASTKEY=null; return; }
   if(!me){ $('app').innerHTML=loginView(); bindLogin(); LASTKEY=key; return; }
   UI.view=me.role; if(me.role==='r') UI.rCode=me.id; if(me.role==='s') UI.sLine=me.line;
   $('app').innerHTML = (UI.view==='r'?rView():UI.view==='s'?sView():cView())+askView(); afterRender();
@@ -1055,20 +1106,30 @@ function pick(k,id){ UI[k]=id; render(); if(NARROW.matches){ const t=document.qu
 function loginView(){
   return '<div class="login"><form class="lcard" id="lForm" autocomplete="on"><img class="llogo" src="'+LOGO_C+'" alt="민자철도관리지원센터"><h1>현장체험 평가단 운영시스템</h1><div class="lsub">발급받은 아이디와 비밀번호로 로그인</div>'
     +'<label class="f" for="lId">아이디</label><div class="ifield">'+ic('user')+'<input class="in" id="lId" placeholder="예) test_sh" autocomplete="username" autocapitalize="off"></div>'
-    +'<label class="f" for="lPw">비밀번호 (PIN)</label><div class="ifield">'+ic('lock')+'<input class="in" id="lPw" type="password" inputmode="numeric" autocomplete="current-password"></div>'
+    +'<label class="f" for="lPw">비밀번호</label><div class="ifield">'+ic('lock')+'<input class="in" id="lPw" type="password" inputmode="numeric" autocomplete="current-password"></div>'
     +'<label class="chk" style="margin-top:14px"><input type="checkbox" id="lKeep" checked> 로그인 상태 유지</label>'
     +'<div class="lerr" id="lErr" role="alert"></div><button class="btn pri wide">로그인</button>'
     +(IOS_HINT?'<div class="guide">아이폰 앱 설치: 사파리 하단 공유 버튼 → [홈 화면에 추가]</div>':'')+'</form></div>';
 }
 function bindLogin(){ $('lForm').onsubmit=ev=>{ ev.preventDefault(); doLogin($('lId').value,$('lPw').value); }; }
 function doLogin(id,pw){
+  if(FBCFG){
+    if(!ADB||!ADB.Au){ $('lErr').textContent='서버 연결 중, 잠시 후 다시 시도'; return; }
+    if(!String(id).trim()||!pw){ $('lErr').textContent='아이디와 비밀번호 입력 필요'; return; }
+    const {Au,auth}=ADB, btn=document.querySelector('#lForm button.wide'); $('lErr').textContent=''; btn.disabled=true;
+    Au.setPersistence(auth,$('lKeep').checked?Au.browserLocalPersistence:Au.browserSessionPersistence)
+      .then(()=>{ UI.loginJust=true; return Au.signInWithEmailAndPassword(auth,String(id).trim().toLowerCase()+'@'+AUTH_DOMAIN,pw); })
+      .catch(err=>{ UI.loginJust=false; btn.disabled=false; const c=err&&err.code||'';
+        $('lErr').textContent=/too-many/.test(c)?'로그인 시도가 많아 잠시 막힘, 몇 분 뒤 다시 시도':/network/.test(c)?'인터넷 연결 확인 필요':'아이디 또는 비밀번호가 맞지 않음'; });
+    return; }
   const a=ACC.find(x=>x.id.toUpperCase()===String(id).trim().toUpperCase());
   if(!a||pw!==DEMO_PIN){ $('lErr').textContent='아이디 또는 비밀번호가 맞지 않음'; return; }
   UI.me=a; UI.rTab='home'; UI.rDetail=UI.sSel=UI.cSel=null;
   try{ sessionStorage.setItem('cpprms_mystery_me',a.id); if($('lKeep').checked) localStorage.setItem('cpprms_mystery_auto',a.id); else localStorage.removeItem('cpprms_mystery_auto'); }catch(e){}
   askCheck(); render(); window.scrollTo(0,0); if(!UI.askNoti) tst(a.name+' 로그인');
 }
-function logout(){ UI.me=null; UI.nOpen=false; try{ sessionStorage.removeItem('cpprms_mystery_me'); localStorage.removeItem('cpprms_mystery_auto'); }catch(e){} render(); window.scrollTo(0,0); }
+function logout(){ if(FBCFG&&ADB&&ADB.Au){ UI.nOpen=false; try{ sessionStorage.removeItem('cpprms_mystery_me'); localStorage.removeItem('cpprms_mystery_auto'); }catch(e){} ADB.Au.signOut(ADB.auth); window.scrollTo(0,0); return; }
+  UI.me=null; UI.nOpen=false; try{ sessionStorage.removeItem('cpprms_mystery_me'); localStorage.removeItem('cpprms_mystery_auto'); }catch(e){} render(); window.scrollTo(0,0); }
 /* 로그인 유지: 이 창에서 로그인한 계정, 없으면 '로그인 상태 유지'로 저장한 계정 */
 function restoreMe(){ try{ const id=sessionStorage.getItem('cpprms_mystery_me')||localStorage.getItem('cpprms_mystery_auto'); const a=ACC.find(x=>x.id===id); if(a) UI.me=a; }catch(e){} }
 /* 뒤로가기: 화면 이동마다 기록을 남겨 이전 화면으로 복귀, 첫 화면에서는 한 번 더 눌러야 종료 */
@@ -1115,7 +1176,7 @@ function notiList(){
       if(me.role==='c') ok=w==='평가단'||w==='SPC';
       else if(me.role==='s') ok=w==='평가단'||w==='센터';
       else ok=(w==='SPC'&&(/조치 완료/.test(x)||e.code===me.id))||(w==='센터'&&e.code===me.id);
-      if(ok) out.push({k:e.id+'|'+h.t+'|'+x,id:e.id,t:h.t,who:w,what:x,line:e.line,place:e.stn+' '+e.loc,mine:e.code===me.id}); });
+      if(ok) out.push({k:e.id+'|'+(h.k||h.t)+'|'+x,id:e.id,t:h.t,who:w,what:x,line:e.line,place:e.stn+' '+e.loc,mine:e.code===me.id}); });
   });
   if(me.role==='r') (DB.notice||[]).filter(n=>!n.line||n.line===me.line).forEach(n=>out.push({k:'N|'+n.id,id:n.id,t:n.t,who:'센터',what:'공지 등록',line:n.line||'전체',place:n.title,mine:false}));
   const d=nDel();
@@ -1176,7 +1237,7 @@ document.addEventListener('click',()=>{ if(UI.nOpen) notiToggle(false); });
 function rTo(t){ if(UI.me&&UI.me.role==='r'&&t!=='new') clearDraft(); if(t==='nt') try{ localStorage.setItem(NTKEY(),Date.now()); }catch(e){} UI.satYm=null; UI.rTab=t; UI.rDetail=null; UI.rEdit=null; UI.rNotice=null; UI.preCat=null; render(); const b=$('pb'); if(b) b.scrollTop=0; }
 function rView(){
   const code=UI.rCode, line=lineOf(code);
-  const toCheck=DB.ev.filter(e=>e.line===line&&e.status==='조치완료');
+  const toCheck=DB.ev.filter(e=>e.code===code&&e.status==='조치완료');
   let body='';
   if(UI.rNotice) body=rNoticeView(UI.rNotice);
   else if(UI.rEdit&&findEv(UI.rEdit)) body=rNew(line,findEv(UI.rEdit));
@@ -1340,7 +1401,7 @@ function bindNew(){
       if(!ch.length){ UI.rEdit=null; render(); tst('변경 내용 없음'); return; }
       const oldV=e.video; ch.forEach(k=>e[k]=nv[k]); e.photo=photosOf(e)[0]||null; if(oldV&&(!e.video||e.video.key!==oldV.key)) deleteVideo(oldV); addHist(e,'평가단','신고 내용 수정 ('+ch.map(k=>NM[k]).join(', ')+')',UI.rCode);
       save(e); clearDraft(); UI.rEdit=null; render(); tst('수정 완료 / SPC, 센터 화면에 반영'); return; }
-    const line=lineOf(UI.rCode), now=Date.now();
+    const line=lineOf(UI.rCode), now=nowS();
     DB.seq=(DB.seq||0)+1;
     const e={id:'EV-'+fmtYM(now)+'-'+String(DB.seq).padStart(4,'0'),line,stn:$('nStn').value,loc:$('nLoc').value,cat:document.querySelector('input[name=cat]:checked').value,
       desc,code:UI.rCode,photo:NEWPHOTOS[0]||null,photos:NEWPHOTOS.slice(),status:'접수',t:{rep:now,acc:now},hist:[{t:now,who:'평가단',what:'신고 등록'},{t:now,who:'시스템',what:'SPC, 센터 동시 통보 (자동)'}],plan:null,act:null,check:null,reject:null,objection:null,round:1,bell:null,absent:null};
@@ -1365,7 +1426,7 @@ function rCheck(list){
 function doCheck(id,ok){
   const e=findEv(id), memo=$('m_'+id).value.trim();
   if(!ok&&!memo){ tst('미개선 사유 입력 필요'); $('m_'+id).focus(); return; }
-  const now=Date.now(); e.check={ok,memo,by:UI.rCode}; e.t.chk=now;
+  const now=nowS(); e.check={ok,memo,by:UI.rCode}; e.t.chk=now;
   if(ok){ e.status='확인완료'; addHist(e,'평가단','현장 확인: 개선됨'+(memo?' ('+memo+')':''),UI.rCode); tst('개선 확인 / 센터 종결 대기'); }
   else { e.status='재조치'; e.round=(e.round||1)+1; e.t.done=null; addHist(e,'평가단','현장 확인: 미개선, 재조치 요청 ('+memo+')',UI.rCode); tst('재조치 요청 / SPC 재통보'); }
   save(e); render();
@@ -1397,7 +1458,7 @@ function rSat(code,line){
 function saveSat(){
   if(SATV.some(v=>!v)){ tst('3개 항목 모두 선택 필요'); return; }
   const code=UI.rCode, ym=fmtYM(Date.now()); DB.sat=DB.sat.filter(s=>!(s.code===code&&s.ym===ym));
-  const ent={code,line:lineOf(code),ym,s:SATV.slice(),memo:$('satMemo').value.trim(),t:Date.now()}; DB.sat.push(ent); UI.satYm=null; if(ARTDB) ADB.collection('sat').doc(satId(code,ym)).set(ent).catch(()=>tst('만족도 저장 실패')); else if(SERVER) api('POST','/api/sat',ent); else save(); SATK=''; render(); tst(ymLabel(ym)+' 만족도 저장');
+  const ent={code,line:lineOf(code),ym,s:SATV.slice(),memo:$('satMemo').value.trim(),t:Date.now()}; DB.sat.push(ent); UI.satYm=null; if(ARTDB) ADB.collection('sat').doc(satId(code,ym)).set(ADB.F?{...ent,t:ADB.F.serverTimestamp()}:ent).catch(()=>tst('만족도 저장 실패')); else if(SERVER) api('POST','/api/sat',ent); else save(); SATK=''; render(); tst(ymLabel(ym)+' 만족도 저장');
 }
 function rMe(code,line){
   return '<div class="ptitle">내 정보</div><div class="psub">현장체험 평가단 계정</div>'
@@ -1448,10 +1509,10 @@ function sDetail(e){
     +'<div class="sub-h">'+ic('clock')+'처리 이력</div>'+timeline(e,false);
 }
 function doPlan(id){ const e=findEv(id), txt=$('sPlan').value.trim(); if(!txt){ tst('조치 계획 입력 필요'); return; }
-  e.plan={txt,due:$('sDue').value}; e.t.plan=Date.now(); e.status='조치중'; addHist(e,'SPC','조치 계획 등록'); save(e); render(); tst('조치 계획 등록'); }
+  e.plan={txt,due:$('sDue').value}; e.t.plan=nowS(); e.status='조치중'; addHist(e,'SPC','조치 계획 등록'); save(e); render(); tst('조치 계획 등록'); }
 function doDone(id){ const e=findEv(id), txt=$('sAct').value.trim(); if(!txt){ tst('조치 완료 내용 입력 필요'); return; }
   const inp=$('sPhoto'); if(!inp.files.length){ tst('조치 후 사진 필수'); return; }
-  readPhoto(inp,p=>{ e.act={txt,photo:p}; e.t.done=Date.now(); e.status='조치완료'; addHist(e,'SPC','조치 완료 등록'+(e.round>1?' (재조치)':'')); save(e); render(); tst('조치 완료 등록 / 평가단 확인 요청'); }); }
+  readPhoto(inp,p=>{ e.act={txt,photo:p}; e.t.done=nowS(); e.status='조치완료'; addHist(e,'SPC','조치 완료 등록'+(e.round>1?' (재조치)':'')); save(e); render(); tst('조치 완료 등록 / 평가단 확인 요청'); }); }
 function doObj(id){ const e=findEv(id), txt=$('sObj').value.trim(); if(!txt){ tst('사유 입력 필요'); return; }
   e.objection=txt; addHist(e,'SPC','이의 제기 등록 ('+txt+')'); save(e); render(); tst('이의 제기 등록 / 센터 검토'); }
 
@@ -1502,7 +1563,7 @@ function cDetail(e){
     +'<div class="sub-h">'+ic('clock')+'처리 이력 (단계별 일시 자동 기록)</div>'+timeline(e,true);
 }
 function doReject(id){ const e=findEv(id), r=$('cRej').value; e.status='반려'; e.reject=r; addHist(e,'센터','평가 제외 ('+r+')'); save(e); render(); tst('평가 제외 처리 / SPC 화면에 표시'); }
-function doClose(id){ const e=findEv(id); e.status='종결'; e.t.close=Date.now(); addHist(e,'센터','종결 처리'); save(e); render(); tst('종결 / 처리 기간 '+fmtSpan(spanH(e))); }
+function doClose(id){ const e=findEv(id); e.status='종결'; e.t.close=nowS(); addHist(e,'센터','종결 처리'); save(e); render(); tst('종결 / 처리 기간 '+fmtSpan(spanH(e))); }
 function cNotice(){
   const L=(DB.notice||[]).slice().sort((a,b)=>(b.pin-a.pin)||(b.t-a.t));
   const ed=UI.ntEdit&&L.find(x=>x.id===UI.ntEdit);
@@ -1524,9 +1585,11 @@ function noticeAdd(){
   if(!body){ tst('내용 입력 필요'); $('ntBody').focus(); return; }
   const old=UI.ntEdit&&(DB.notice||[]).find(x=>x.id===UI.ntEdit);
   /* 수정은 등록 시각(t)을 유지해 새 알림이 가지 않게 하고, 수정 시각(tu)만 기록 */
-  const n=old?{...old,line:$('ntLine').value,pin:$('ntPin').checked,title,body,tu:Date.now()}:{type:'notice',id:'NT-'+Date.now(),line:$('ntLine').value,pin:$('ntPin').checked,t:Date.now(),title,body};
+  const n=old?{...old,line:$('ntLine').value,pin:$('ntPin').checked,title,body,tu:nowS()}:{type:'notice',id:'NT-'+Date.now(),line:$('ntLine').value,pin:$('ntPin').checked,t:nowS(),title,body};
   DB.notice=(DB.notice||[]).filter(x=>x.id!==n.id).concat(n); UI.ntEdit=null;
-  if(ADB&&ADB.F) ADB.collection('meta').doc(n.id).set(plain(n)).catch(()=>tst('공지 저장 실패')); else save();
+  if(ADB&&ADB.F){ const {F,db}=ADB, ref=F.doc(db,'meta',n.id);
+    (old?F.updateDoc(ref,{line:n.line,pin:n.pin,title,body,tu:F.serverTimestamp()}):F.setDoc(ref,{...plain(n),t:F.serverTimestamp()})).catch(()=>tst('공지 저장 실패')); }
+  else save();
   render(); tst(old?'공지 수정 완료':'공지 등록 / '+(n.line||'전체 노선')+' 평가단에게 알림');
 }
 function noticeEdit(id){ UI.ntEdit=id; render(); const f=$('ntForm'); if(f) f.scrollIntoView({block:'start'}); setTimeout(()=>{ const t=$('ntTitle'); if(t) t.focus({preventScroll:true}); },50); }
