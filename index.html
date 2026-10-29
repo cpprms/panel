@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
   현장체험 평가단 신고 및 조치 관리 시스템 시제품 (요구 전달용)
-  버전: v3.9  |  수정일: 2026-10-29  |  디자인기준(cpprms-ui-craft) 적용
+  버전: v4.0  |  수정일: 2026-10-29  |  디자인기준(cpprms-ui-craft) 적용
   근거: 참고3_현장체험평가단_신고조치관리시스템_구성안_20261028.docx
   성격: 브라우저 안에서만 동작(서버 없음). 입력 내용은 이 브라우저에 저장되며 [예시 데이터 초기화]로 처음 상태 복원.
         신고 내용과 처리 일시는 예시이며 실제 사례가 아님. CPPRMS 실제 코드 아님.
@@ -71,6 +71,9 @@
         화면 안 맨 위 고정으로 변경, 앱 복귀, 사진 선택 취소, 화면 크기 변화 때 밀린 화면(visualViewport 포함) 원위치.
   v3.6 (2026-10-28) 신고 사진 최대 5장: 카메라 촬영과 앨범 선택 모두 여러 번 추가, 앨범은 한 번에 여러 장 선택, 장마다 삭제, 5장이면 추가 버튼 잠금과 안내,
         장마다 압축(640px)과 HEIC 변환, 합계가 크면 한 번 더 축소. 평가단, SPC, 센터 상세에서 여러 장 표시와 크게 보기. 기존 1장 신고 호환.
+  v4.0 (2026-10-29) SPC 조치 완료 등록에 평가단과 같은 사진, 동영상 기능 적용: 카메라 직접 촬영과 앨범 선택, 사진 최대 5장(1장 이상 필수),
+        동영상 1개(앱 안 촬영 20초, 앨범 영상 20초, 10MB 이하). 조치 사진, 동영상은 평가단, SPC, 센터 상세와 현장 확인 화면에 표시.
+        신고 문서 1건 용량 한도(1MB) 안에서 신고 사진 0.5MB, 조치 사진 0.4MB 이내로 자동 축소.
   v3.9 (2026-10-29) 평가단 실사용 점검 반영: 신고 화면 역, 위치, 유형을 빈 상태로 시작(고르지 않으면 등록 불가, 빠진 항목 빨간 테두리),
         확인 대기 신고 상세에서 바로 개선됨/미개선 선택, 평가단 화면 상태명 "확인 필요", 홈 활동 숫자 "확인 완료",
         사진 없음 표시를 한 줄로 축소, 내 정보 버전 표기 수정 및 공유 저장소에서 예시 데이터 초기화 숨김, 노선명과 같은 사업자명 중복 표시 제거.
@@ -606,7 +609,7 @@ img.zoom{cursor:zoom-in}
 <body>
 <header class="hd"><div class="hd-in"><span class="logo"><img src="data:image/png;base64,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" alt="CPPR 민자철도 운영관리시스템"><img class="koti" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALwAAAAgCAYAAACo7RKTAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyNpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQ4IDc5LjE2NDAzNiwgMjAxOS8wOC8xMy0wMTowNjo1NyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIDIxLjAgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjQ2MkJBRUNFRTI3QzExRURCMEYyOUM5REIzMDk5RjQyIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjQ2MkJBRUNGRTI3QzExRURCMEYyOUM5REIzMDk5RjQyIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6NDYyQkFFQ0NFMjdDMTFFREIwRjI5QzlEQjMwOTlGNDIiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6NDYyQkFFQ0RFMjdDMTFFREIwRjI5QzlEQjMwOTlGNDIiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4lML+fAAAL2klEQVR42uxcC3RV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" alt="한국교통연구원"></span><nav class="gnb" id="gnb" aria-label="주 메뉴"></nav><div class="util" id="who"></div></div></header>
 <div id="app"></div>
-<div class="foot" id="foot"><span id="envTag"></span>v3.9 (2026-10-29) <button id="rstBtn" onclick="resetAll()">예시 데이터 초기화</button></div>
+<div class="foot" id="foot"><span id="envTag"></span>v4.0 (2026-10-29) <button id="rstBtn" onclick="resetAll()">예시 데이터 초기화</button></div>
 <div id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -741,7 +744,7 @@ function save(e){
     else tst('서버 저장 실패, 연결 확인 필요');
   });
 }
-function busy(){ if(!UI.me) return true; if(VPLAYING) return true; const a=document.activeElement; if(a&&(a.tagName==='TEXTAREA'||(a.tagName==='INPUT'&&a.type!=='checkbox')||a.tagName==='SELECT')) return true; return UI.view==='r'&&((UI.rTab==='new'&&!UI.rDetail)||!!UI.rEdit); }
+function busy(){ if(!UI.me) return true; if(VPLAYING) return true; const a=document.activeElement; if(a&&(a.tagName==='TEXTAREA'||(a.tagName==='INPUT'&&a.type!=='checkbox')||a.tagName==='SELECT')) return true; if(UI.view==='s'&&$('nPrev')&&(NEWPHOTOS.length||NEWVIDEO)) return true; return UI.view==='r'&&((UI.rTab==='new'&&!UI.rDetail)||!!UI.rEdit); }
 async function poll(){ const r=await api('GET','/api/state'); if(r.ok&&r.j.ev&&r.j.rev!==DB.rev&&!busy()){ DB=r.j; render(); } }
 async function init(){
   if(!FBCFG){ restoreMe(); if(UI.me) askCheck(); draftCheck(); }
@@ -952,6 +955,7 @@ function shrinkData(src,max,q){ return new Promise(ok=>{ const img=new Image(); 
 /* 신고 사진: 여러 장(photos), 예전 1장(photo) 호환 */
 const PMAX=5;
 const photosOf=e=>Array.isArray(e.photos)&&e.photos.length?e.photos:(e.photo?[e.photo]:[]);
+const actPhotos=e=>e.act?photosOf(e.act):[];
 function photosHtml(arr,label){
   if(!arr.length) return '<div class="nophoto">'+ic('img')+label+' 없음</div>';
   if(arr.length===1) return '<img class="photo zoom" src="'+arr[0]+'" alt="'+label+'">';
@@ -1021,12 +1025,12 @@ function pickAlbumVideo(inp){
   });
 }
 /* 저장: 공유 저장소는 조각으로, 이 기기 저장은 메모리 */
-async function uploadVideo(v,prog){
+async function uploadVideo(v,prog,own){
   const key='V'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
   const meta={key,type:v.type,size:v.size,dur:v.dur?Math.round(v.dur*10)/10:null,poster:v.poster||null};
   if(!(ADB&&ADB.F)){ LOCALVID[key]=v.blob; meta.local=true; return meta; }
   const {F,db}=ADB, buf=new Uint8Array(await v.blob.arrayBuffer()), n=Math.ceil(buf.length/VCHUNK); meta.n=n;
-  for(let i=0;i<n;i++){ if(prog) prog(i+1,n); await F.setDoc(F.doc(db,'meta','vid_'+key+'_'+i),{type:'vchunk',key,i,n,code:UI.rCode,line:lineOf(UI.rCode),data:F.Bytes.fromUint8Array(buf.subarray(i*VCHUNK,(i+1)*VCHUNK))}); }
+  for(let i=0;i<n;i++){ if(prog) prog(i+1,n); await F.setDoc(F.doc(db,'meta','vid_'+key+'_'+i),{type:'vchunk',key,i,n,code:own?own.code:UI.rCode,line:own?own.line:lineOf(UI.rCode),data:F.Bytes.fromUint8Array(buf.subarray(i*VCHUNK,(i+1)*VCHUNK))}); }
   return meta;
 }
 function deleteVideo(m){ if(!m||m.local||!(ADB&&ADB.F)) return; const {F,db}=ADB; for(let i=0;i<(m.n||0);i++) F.deleteDoc(F.doc(db,'meta','vid_'+m.key+'_'+i)).catch(()=>{}); }
@@ -1155,7 +1159,7 @@ window.addEventListener('popstate',e=>{
   if(UI.nOpen){ nSetRead(); UI.nOpen=false; history.pushState({app:1,s:navSnap()},''); render(); return; }
   POPPING=true; Object.assign(UI,st.s); render(); POPPING=false;
 });
-function afterRender(){ if(UI.view==='r'&&((UI.rTab==='new'&&!UI.rDetail)||UI.rEdit)) bindNew(); }
+function afterRender(){ if(UI.view==='r'&&((UI.rTab==='new'&&!UI.rDetail)||UI.rEdit)) bindNew(); if(UI.view==='s'&&UI.sSel&&$('nPrev')) bindAct(); }
 
 /* ===== 알림 (화면 안 알림 + 기기 알림) =====
    역할별로 받을 처리 이력만 모아 알림으로 표시. 읽은 시점은 계정별로 이 기기에 저장.
@@ -1306,7 +1310,7 @@ function rDetail(e){
     +(e.code===UI.rCode&&e.status==='조치완료'&&e.act?'<div class="card"><div class="ct">'+ic('chk')+'현장 확인</div><div class="psub" style="margin:0 0 8px">SPC 조치 결과를 현장에서 확인 후 선택</div>'+checkForm(e)+'</div>':'')
     +(e.reject?'<div class="card"><div class="ct">'+ic('flag')+'평가 제외 사유</div><div class="desc full">'+esc(e.reject)+'</div></div>':'')
     +(e.plan?'<div class="card"><div class="ct">'+ic('tool')+'SPC 조치 계획</div><div class="desc full">'+esc(e.plan.txt)+(e.plan.due?' (예정 '+e.plan.due+')':'')+'</div></div>':'')
-    +(e.act?'<div class="card"><div class="ct">'+ic('ok')+'SPC 조치 결과</div><div class="desc full">'+esc(e.act.txt)+'</div><div style="margin-top:10px">'+photoHtml(e.act.photo,'조치 후 사진')+'</div></div>':'')
+    +(e.act?'<div class="card"><div class="ct">'+ic('ok')+'SPC 조치 결과</div><div class="desc full">'+esc(e.act.txt)+'</div><div style="margin-top:10px">'+photosHtml(actPhotos(e),'조치 후 사진')+videoHtml(e.act.video)+'</div></div>':'')
     +'<div class="card"><div class="ct">'+ic('clock')+'처리 이력</div>'+timeline(e,true)+'</div>';
 }
 const canEdit=e=>['신고','접수'].includes(e.status);
@@ -1328,16 +1332,20 @@ function rNew(line,ed){
     +'<label class="f" for="bGo">역무원 출동까지 걸린 시간 (선택)</label><div class="tm"><input class="in num" id="bGo" type="number" inputmode="numeric" min="0" value="'+(ed&&ed.bell&&ed.bell.go!=null?ed.bell.go:'')+'"><span>분</span></div></div></div>'
     +'<div class="card"><div class="step"><i>3</i>내용 및 사진</div>'
     +'<label class="f" for="nDesc">내용</label><textarea class="in" id="nDesc" placeholder="예) 2번 출입구 엘리베이터 운행 중지, 우회 안내 없음">'+(ed?esc(ed.desc):'')+'</textarea>'
-    +'<div class="f">사진 <span class="pcnt" id="pCnt">최대 '+PMAX+'장</span></div><input type="file" accept="image/*" capture="environment" id="nCam" class="fpick" tabindex="-1" aria-hidden="true"><input type="file" accept="image/*" multiple id="nPhoto" class="fpick" tabindex="-1" aria-hidden="true">'
-    +'<div id="nPrev" class="pthumbs"></div>'
-    +'<div class="pbtns"><label class="btn" for="nCam" id="nCamL">'+ic('cam')+'카메라로 촬영</label><label class="btn" for="nPhoto" id="nPhotoL">'+ic('img')+'앨범에서 선택</label></div>'
-    +'<div class="f" style="margin-top:18px">동영상 <span class="pcnt">선택, 1개, 최대 '+VMAX+'초</span></div><input type="file" accept="video/*" id="nVid" class="fpick" tabindex="-1" aria-hidden="true">'
-    +'<div id="vPrev"></div><div class="pbtns" id="vBtns"><button type="button" class="btn" id="vRecB">'+ic('video')+'동영상 촬영</button><label class="btn" for="nVid" id="nVidL">'+ic('film')+'앨범 영상 선택</label></div>'
-    +'<div class="psub" style="margin:6px 0 0">시설 위주로, 다른 이용객 얼굴이 나오지 않게 촬영</div>'
+    +mediaHtml()
     +'<label class="chk"><input type="checkbox" id="nAgree"> 사진과 동영상에 개인을 알아볼 수 있는 내용이 없음을 확인</label></div>'
     +(ed?'<div class="acts" style="margin-top:4px"><button class="btn" style="flex:1;min-height:52px" onclick="clearDraft();UI.rEdit=null;render()">취소</button><button class="btn pri" style="flex:2;min-height:52px" id="nSubmit">'+ic('check')+'수정 저장</button></div>'
       :'<button class="btn pri wide" id="nSubmit">'+ic('check')+'신고 등록</button>'
     +'<div class="psub" style="margin-top:10px;text-align:center">단순 청소, 분실물, 운임 문의는 신고 대상 아님</div>');
+}
+/* 사진(최대 5장), 동영상(1개) 입력 칸: 평가단 신고, SPC 조치 완료 공통 */
+function mediaHtml(lbl){ return ''
+    +'<div class="f">'+(lbl||'사진')+' <span class="pcnt" id="pCnt">최대 '+PMAX+'장</span></div><input type="file" accept="image/*" capture="environment" id="nCam" class="fpick" tabindex="-1" aria-hidden="true"><input type="file" accept="image/*" multiple id="nPhoto" class="fpick" tabindex="-1" aria-hidden="true">'
+    +'<div id="nPrev" class="pthumbs"></div>'
+    +'<div class="pbtns"><label class="btn" for="nCam" id="nCamL">'+ic('cam')+'카메라로 촬영</label><label class="btn" for="nPhoto" id="nPhotoL">'+ic('img')+'앨범에서 선택</label></div>'
+    +'<div class="f" style="margin-top:18px">동영상 <span class="pcnt">선택, 1개, 최대 '+VMAX+'초</span></div><input type="file" accept="video/*" id="nVid" class="fpick" tabindex="-1" aria-hidden="true">'
+    +'<div id="vPrev"></div><div class="pbtns" id="vBtns"><button type="button" class="btn" id="vRecB">'+ic('video')+'동영상 촬영</button><label class="btn" for="nVid" id="nVidL">'+ic('film')+'앨범 영상 선택</label></div>'
+    +'<div class="psub" style="margin:6px 0 0">시설 위주로, 다른 이용객 얼굴이 나오지 않게 촬영</div>';
 }
 let NEWPHOTOS=[], NEWORIG=[];
 /* 사진 미리보기: 장마다 삭제 버튼, 5장이면 추가 버튼 잠금 */
@@ -1348,25 +1356,11 @@ function paintPhotos(busy){
   ['nCam','nPhoto'].forEach(id=>{ $(id).disabled=full; }); ['nCamL','nPhotoL'].forEach(id=>$(id).classList.toggle('dis',full));
 }
 function rmPhoto(i){ NEWPHOTOS.splice(i,1); paintPhotos(); saveDraft(); }
-function bindNew(){
-  const ed=UI.rEdit&&findEv(UI.rEdit), orig=ed?photosOf(ed).slice():[];
-  NEWPHOTOS=orig.slice(); NEWORIG=orig.slice();
-  /* 임시 저장 내용 복원 (같은 신고를 작성 중일 때만) */
-  const dr=loadDraft();
-  if(dr&&(dr.edit||null)===(UI.rEdit||null)){
-    DFIELDS.forEach(k=>{ const el=$(k); if(el&&dr[k]!=null) el.value=dr[k]; });
-    if(dr.cat){ const r=document.querySelector('input[name=cat][value="'+dr.cat+'"]'); if(r){ r.checked=true; $('nCats').querySelectorAll('label').forEach(l=>l.classList.toggle('on',l.querySelector('input').checked)); $('bellBox').hidden=dr.cat!==BELL; $('absBox').hidden=dr.cat!==ABS; } }
-    if($('bNone')) $('bNone').checked=!!dr.bNone;
-    if(Array.isArray(dr.photos)&&dr.photos.length) NEWPHOTOS=dr.photos.slice(0,PMAX); else if(dr.photo) NEWPHOTOS=[dr.photo];
-    if(DRAFT_RESTORED){ DRAFT_RESTORED=false; tst(NEWPHOTOS.length?'작성하던 내용 복원':'작성하던 내용 복원, 사진은 다시 선택'); }
-  }
-  const pb=$('pb'); if(pb){ pb.oninput=saveDraft; pb.onchange=saveDraft; }
+/* 사진, 동영상 입력 칸 동작 연결 (mediaHtml과 짝) */
+function bindMedia(){
   /* 사진 고르기 전에 키보드를 내려 둠 (돌아왔을 때 화면 높이가 줄어든 채로 남는 문제 방지) */
   ['nCamL','nPhotoL'].forEach(id=>{ const l=$(id); if(l) l.addEventListener('click',()=>{ const a=document.activeElement; if(a&&a.blur) a.blur(); saveDraft(); }); });
-  $('nCats').querySelectorAll('input').forEach(r=>r.onchange=()=>{ $('nCats').querySelectorAll('label').forEach(l=>l.classList.toggle('on',l.querySelector('input').checked)); $('bellBox').hidden=r.value!==BELL; $('absBox').hidden=r.value!==ABS; });
-  const tgl=()=>{ $('bMin').disabled=$('bSec').disabled=$('bNone').checked; }; $('bNone').onchange=tgl; tgl();
-  paintPhotos();
-  NEWVIDEO=ed&&ed.video?{existing:true,meta:ed.video}:null; paintVideo();
+  paintPhotos(); paintVideo();
   $('vRecB').onclick=openRecorder;
   $('nVidL').addEventListener('click',()=>{ const a=document.activeElement; if(a&&a.blur) a.blur(); saveDraft(); });
   $('nVid').onchange=()=>{ fixSoon(); pickAlbumVideo($('nVid')); }; $('nVid').addEventListener('cancel',fixSoon);
@@ -1381,6 +1375,24 @@ function bindNew(){
   $('nPhoto').onchange=onPick($('nPhoto')); $('nCam').onchange=onPick($('nCam'));
   /* 사진을 고르지 않고 돌아온 경우(취소)도 화면 위치 재정렬 */
   ['nPhoto','nCam'].forEach(id=>{ const el=$(id); el.addEventListener('cancel',fixSoon); el.addEventListener('change',fixSoon); });
+}
+function bindNew(){
+  const ed=UI.rEdit&&findEv(UI.rEdit), orig=ed?photosOf(ed).slice():[];
+  NEWPHOTOS=orig.slice(); NEWORIG=orig.slice();
+  /* 임시 저장 내용 복원 (같은 신고를 작성 중일 때만) */
+  const dr=loadDraft();
+  if(dr&&(dr.edit||null)===(UI.rEdit||null)){
+    DFIELDS.forEach(k=>{ const el=$(k); if(el&&dr[k]!=null) el.value=dr[k]; });
+    if(dr.cat){ const r=document.querySelector('input[name=cat][value="'+dr.cat+'"]'); if(r){ r.checked=true; $('nCats').querySelectorAll('label').forEach(l=>l.classList.toggle('on',l.querySelector('input').checked)); $('bellBox').hidden=dr.cat!==BELL; $('absBox').hidden=dr.cat!==ABS; } }
+    if($('bNone')) $('bNone').checked=!!dr.bNone;
+    if(Array.isArray(dr.photos)&&dr.photos.length) NEWPHOTOS=dr.photos.slice(0,PMAX); else if(dr.photo) NEWPHOTOS=[dr.photo];
+    if(DRAFT_RESTORED){ DRAFT_RESTORED=false; tst(NEWPHOTOS.length?'작성하던 내용 복원':'작성하던 내용 복원, 사진은 다시 선택'); }
+  }
+  const pb=$('pb'); if(pb){ pb.oninput=saveDraft; pb.onchange=saveDraft; }
+  $('nCats').querySelectorAll('input').forEach(r=>r.onchange=()=>{ $('nCats').querySelectorAll('label').forEach(l=>l.classList.toggle('on',l.querySelector('input').checked)); $('bellBox').hidden=r.value!==BELL; $('absBox').hidden=r.value!==ABS; });
+  const tgl=()=>{ $('bMin').disabled=$('bSec').disabled=$('bNone').checked; }; $('bNone').onchange=tgl; tgl();
+  NEWVIDEO=ed&&ed.video?{existing:true,meta:ed.video}:null;
+  bindMedia();
   $('nSubmit').onclick=async()=>{
     const desc=$('nDesc').value.trim(), catR=document.querySelector('input[name=cat]:checked');
     const bad=(el,msg)=>{ el.classList.add('err'); el.scrollIntoView({block:'center',behavior:'smooth'}); if(el.focus) el.focus({preventScroll:true}); tst(msg); return true; };
@@ -1400,8 +1412,8 @@ function bindNew(){
     if((NEWPHOTOS.some(p=>!orig.includes(p))||vNew)&&!$('nAgree').checked){ bad($('nAgree').closest('.chk'),'사진, 동영상 개인정보 확인란 체크 필요'); return; }
     /* 여러 장 합계가 크면 한 번 더 줄임 (저장소 문서 1건 1MB 한도) */
     const total=()=>NEWPHOTOS.reduce((a,p)=>a+p.length,0);
-    if(total()>800000){ NEWPHOTOS=await Promise.all(NEWPHOTOS.map(p=>shrinkData(p,520,0.6))); }
-    if(total()>900000){ tst('사진 용량이 커서 저장할 수 없음, 사진 수를 줄여 주세요'); return; }
+    if(total()>450000){ NEWPHOTOS=await Promise.all(NEWPHOTOS.map(p=>shrinkData(p,520,0.6))); }
+    if(total()>500000){ tst('사진 용량이 커서 저장할 수 없음, 사진 수를 줄여 주세요'); return; }
     /* 동영상 먼저 저장 (조각) */
     let vmeta=NEWVIDEO&&NEWVIDEO.existing?NEWVIDEO.meta:null;
     if(vNew){ const sb=$('nSubmit'), sl=sb.innerHTML; sb.disabled=true;
@@ -1433,7 +1445,7 @@ function rCheck(list){
   return '<div class="ptitle">확인 요청 '+list.length+'건</div><div class="psub">현장에서 실제로 개선됐는지 확인 후 선택</div>'
     +list.map(e=>'<div class="card"><div class="dhead" style="margin-bottom:8px">'+catTile(e.cat)+'<div style="flex:1;min-width:0"><div class="t1" style="font-size:16px">'+esc(e.stn)+' '+esc(e.loc)+'</div><div class="t2">'+esc(e.cat)+' / 신고 '+fmtT(e.t.rep)+'</div></div></div>'
       +'<div class="desc full">'+esc(e.desc)+'</div>'
-      +'<div class="box ok"><b>'+ic('ok')+'SPC 조치 결과 ('+fmtT(e.t.done)+')</b>'+esc(e.act.txt)+'</div>'
+      +'<div class="box ok"><b>'+ic('ok')+'SPC 조치 결과 ('+fmtT(e.t.done)+')</b>'+esc(e.act.txt)+'</div>'+(actPhotos(e).length?photosHtml(actPhotos(e),'조치 후 사진'):'')+videoHtml(e.act.video)
       +checkForm(e)+'</div>').join('');
 }
 function checkForm(e){ return '<textarea class="in" id="m_'+e.id+'" placeholder="확인 의견 (미개선 시 필수)" aria-label="확인 의견" style="min-height:64px"></textarea>'
@@ -1483,7 +1495,7 @@ function rMe(code,line){
     +(INSTALL?'<button class="btn wide" style="margin-bottom:10px" onclick="installApp()">'+ic('dl')+'홈 화면에 앱 설치</button>':'')
     +(IOS_HINT?'<div class="guide" style="margin:0 0 10px">아이폰 앱 설치: 사파리 하단 공유 버튼 → [홈 화면에 추가]</div>':'')
     +'<button class="btn wide" onclick="logout()">'+ic('out')+'로그아웃</button>'
-    +'<img class="mlogo" src="'+LOGO_C+'" alt="민자철도관리지원센터"><div class="psub" style="text-align:center;margin-top:8px">v3.9 (2026-10-29)'+(ADB&&ADB.F?'':' <button style="border:0;background:none;color:var(--gray);text-decoration:underline;font-size:13px" onclick="resetAll()">예시 데이터 초기화</button>')+'</div>';
+    +'<img class="mlogo" src="'+LOGO_C+'" alt="민자철도관리지원센터"><div class="psub" style="text-align:center;margin-top:8px">v4.0 (2026-10-29)'+(ADB&&ADB.F?'':' <button style="border:0;background:none;color:var(--gray);text-decoration:underline;font-size:13px" onclick="resetAll()">예시 데이터 초기화</button>')+'</div>';
 }
 
 /* ===== SPC ===== */
@@ -1509,7 +1521,7 @@ function sDetail(e){
   let act='';
   if(['신고','접수','재조치'].includes(e.status)) act='<div class="formbox"><div class="sub-h">'+ic('tool')+'조치 계획</div><textarea class="in" id="sPlan" aria-label="조치 계획" placeholder="예) 제조사 수리 요청, 부품 교체 예정"></textarea><label class="f" for="sDue">조치 예정일</label><input type="date" class="in" id="sDue" value="'+fmtD(Date.now()+D)+'">'
     +'<div class="acts"><button class="btn pri" onclick="doPlan(\''+e.id+'\')">조치 계획 등록</button></div></div>';
-  if(['신고','접수','조치중','재조치'].includes(e.status)) act+='<div class="formbox"><div class="sub-h">'+ic('ok')+'조치 완료</div><textarea class="in" id="sAct" aria-label="조치 완료 내용" placeholder="조치 내용 입력"></textarea><label class="f" for="sPhoto">조치 후 사진 (필수)</label><input type="file" accept="image/*" class="in" id="sPhoto">'
+  if(['신고','접수','조치중','재조치'].includes(e.status)) act+='<div class="formbox"><div class="sub-h">'+ic('ok')+'조치 완료</div><textarea class="in" id="sAct" aria-label="조치 완료 내용" placeholder="조치 내용 입력"></textarea>'+mediaHtml('조치 후 사진(1장 이상 필수)')
     +'<div class="acts"><button class="btn ok" onclick="doDone(\''+e.id+'\')">조치 완료 등록</button></div></div>';
   if(e.status==='조치완료') act='<div class="box warn"><b>'+ic('clock')+'평가단 현장 확인 대기</b>조치 완료 등록 후 평가단이 현장에서 개선 여부를 확인</div>';
   if(['확인완료','종결'].includes(e.status)) act='<div class="box ok"><b>'+ic('ok')+'처리 완료</b>조치 완료 '+fmtT(e.t.done)+' / 평가단 개선 확인 '+fmtT(e.t.chk)+' / 소요 '+fmtSpan(spanH(e))+'</div>';
@@ -1518,16 +1530,29 @@ function sDetail(e){
     +'<div class="box"><b>'+ic('msg')+'신고 내용</b>'+esc(e.desc)+'</div>'+(e.bell?'<div class="box"><b>'+ic('bell')+'비상호출벨 측정 (지표 ④)</b>'+bellTxt(e.bell)+'</div>':'')+(e.absent?'<div class="box"><b>'+ic('clock')+'역무원 부재 확인 (지표 ③)</b>'+absTxt(e.absent)+'</div>':'')+photosHtml(photosOf(e),'신고 사진')+videoHtml(e.video)
     +(e.check&&!e.check.ok?'<div class="box bad"><b>'+ic('no')+'평가단 미개선 확인</b>'+esc(e.check.memo)+'</div>':'')
     +(e.plan?'<div class="box"><b>'+ic('tool')+'등록한 조치 계획</b>'+esc(e.plan.txt)+(e.plan.due?' (예정 '+e.plan.due+')':'')+'</div>':'')
-    +(e.act&&e.status!=='재조치'?'<div class="box"><b>'+ic('ok')+'조치 결과</b>'+esc(e.act.txt)+'</div>':'')
+    +(e.act&&e.status!=='재조치'?'<div class="box"><b>'+ic('ok')+'조치 결과</b>'+esc(e.act.txt)+'</div>'+(actPhotos(e).length?photosHtml(actPhotos(e),'조치 후 사진'):'')+videoHtml(e.act.video):'')
     +act
     +(isOpen(e)?'<details class="more"><summary>조치 불가 사유 또는 이의 제기</summary><textarea class="in" id="sObj" aria-label="이의 제기 사유" style="margin-top:8px" placeholder="예) 평가 대상 외 시설(타 기관 관리)">'+esc(e.objection||'')+'</textarea><div class="acts"><button class="btn" onclick="doObj(\''+e.id+'\')">이의 제기 등록</button></div></details>':'')
     +'<div class="sub-h">'+ic('clock')+'처리 이력</div>'+timeline(e,false);
 }
 function doPlan(id){ const e=findEv(id), txt=$('sPlan').value.trim(); if(!txt){ tst('조치 계획 입력 필요'); return; }
   e.plan={txt,due:$('sDue').value}; e.t.plan=nowS(); e.status='조치중'; addHist(e,'SPC','조치 계획 등록'); save(e); render(); tst('조치 계획 등록'); }
-function doDone(id){ const e=findEv(id), txt=$('sAct').value.trim(); if(!txt){ tst('조치 완료 내용 입력 필요'); return; }
-  const inp=$('sPhoto'); if(!inp.files.length){ tst('조치 후 사진 필수'); return; }
-  readPhoto(inp,p=>{ e.act={txt,photo:p}; e.t.done=nowS(); e.status='조치완료'; addHist(e,'SPC','조치 완료 등록'+(e.round>1?' (재조치)':'')); save(e); render(); tst('조치 완료 등록 / 평가단 확인 요청'); }); }
+/* SPC 조치 완료: 사진 최대 5장(1장 이상 필수), 동영상 1개(선택), 신고 사진과 같은 문서에 저장되므로 용량을 나눠 씀 */
+let ACTFOR=null;
+function bindAct(){ if(ACTFOR!==UI.sSel){ ACTFOR=UI.sSel; NEWPHOTOS=[]; NEWVIDEO=null; } bindMedia(); }
+async function doDone(id){ const e=findEv(id), txt=$('sAct').value.trim(); if(!txt){ tst('조치 완료 내용 입력 필요'); $('sAct').focus(); return; }
+  if(!NEWPHOTOS.length){ tst('조치 후 사진 1장 이상 필수'); return; }
+  const total=()=>NEWPHOTOS.reduce((a,p)=>a+p.length,0);
+  if(total()>350000){ NEWPHOTOS=await Promise.all(NEWPHOTOS.map(p=>shrinkData(p,520,0.6))); }
+  if(total()>400000){ tst('사진 용량이 커서 저장할 수 없음, 사진 수를 줄여 주세요'); return; }
+  const sb=document.querySelector('button[onclick^="doDone"]'), sl=sb?sb.innerHTML:'';
+  let vmeta=null;
+  if(NEWVIDEO&&!NEWVIDEO.existing){ if(sb) sb.disabled=true;
+    try{ vmeta=await Promise.race([uploadVideo(NEWVIDEO,(k,n)=>{ if(sb) sb.textContent='동영상 올리는 중 '+k+'/'+n; },{code:e.code,line:e.line}),new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),90000))]); }
+    catch(err){ if(sb){ sb.disabled=false; sb.innerHTML=sl; } tst('동영상 저장 실패, 연결 확인 후 다시 눌러 주세요'); return; } }
+  e.act={txt,photo:NEWPHOTOS[0],photos:NEWPHOTOS.slice(),video:vmeta}; e.t.done=nowS(); e.status='조치완료';
+  NEWPHOTOS=[]; NEWVIDEO=null; ACTFOR=null;
+  addHist(e,'SPC','조치 완료 등록'+(e.round>1?' (재조치)':'')); save(e); render(); tst('조치 완료 등록 / 평가단 확인 요청'); }
 function doObj(id){ const e=findEv(id), txt=$('sObj').value.trim(); if(!txt){ tst('사유 입력 필요'); return; }
   e.objection=txt; addHist(e,'SPC','이의 제기 등록 ('+txt+')'); save(e); render(); tst('이의 제기 등록 / 센터 검토'); }
 
@@ -1572,7 +1597,7 @@ function cDetail(e){
     +'<dt>평가단</dt><dd>'+esc(e.code)+'</dd><dt>처리 기한</dt><dd>'+fmtT(dueOf(e))+'</dd><dt>처리 기간</dt><dd>'+fmtSpan(spanH(e))+(e.round>1?' / 재조치 '+(e.round-1)+'회':'')+'</dd></dl>'
     +'<div class="box"><b>'+ic('msg')+'신고 내용</b>'+esc(e.desc)+'</div>'+(e.bell?'<div class="box"><b>'+ic('bell')+'비상호출벨 측정 (지표 ④)</b>'+bellTxt(e.bell)+'</div>':'')+(e.absent?'<div class="box"><b>'+ic('clock')+'역무원 부재 확인 (지표 ③)</b>'+absTxt(e.absent)+'</div>':'')+photosHtml(photosOf(e),'신고 사진')+videoHtml(e.video)
     +(e.objection?'<div class="box warn"><b>'+ic('flag')+'SPC 이의 제기</b>'+esc(e.objection)+'</div>':'')
-    +(e.act?'<div class="box"><b>'+ic('tool')+'SPC 조치 결과</b>'+esc(e.act.txt)+'</div>'+(e.act.photo?photoHtml(e.act.photo,'조치 후 사진'):''):'')
+    +(e.act?'<div class="box"><b>'+ic('tool')+'SPC 조치 결과</b>'+esc(e.act.txt)+'</div>'+(actPhotos(e).length?photosHtml(actPhotos(e),'조치 후 사진'):'')+videoHtml(e.act.video):'')
     +(e.check?'<div class="box '+(e.check.ok?'ok':'bad')+'"><b>'+ic(e.check.ok?'ok':'no')+'평가단 현장 확인 ('+esc(e.check.by)+')</b>'+(e.check.ok?'개선됨':'미개선')+(e.check.memo?' / '+esc(e.check.memo):'')+'</div>':'')
     +act
     +'<div class="sub-h">'+ic('clock')+'처리 이력 (단계별 일시 자동 기록)</div>'+timeline(e,true);
