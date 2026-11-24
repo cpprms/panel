@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>현장체험평가단 로그인 | 민자철도 운영관리시스템</title>
+<link rel="icon" href="data:,">
+<meta name="theme-color" content="#ffffff">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="평가단">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="./resource/panel/manifest.json">
+<link rel="apple-touch-icon" href="./resource/panel/apple-touch-icon.png">
+<link rel="stylesheet" href="./resource/css/panelapp.css">
+<link rel="stylesheet" href="./resource/css/fbtest.css">
+</head>
+<body>
+<div class="fbtest" role="note">시험용 화면 (운영 시스템과 별도 저장)</div>
+<header class="shd"><div class="shd-in"><img class="slogo" src="./resource/images/cppr_logo.svg" alt="민자철도관리지원센터" width="308" height="35"><span class="ssvc">현장체험평가단</span></div></header>
+<div id="app">
+<div class="login"><form class="lcard" id="lForm" autocomplete="on">
+  <h1>현장체험평가단 운영시스템</h1>
+  <div class="lsub" id="lSub">발급받은 사업자, 계정 번호와 비밀번호로 로그인</div>
+  <div id="lgIn">
+    <label class="f" for="lOrg">사업자</label>
+    <select class="in" id="lOrg" required>
+      <option value="" selected="selected">사업자 선택</option>
+      <option value="RID241201000001">공항철도 (인천공항철도)</option><option value="RID241201000002">신분당선 (신분당선[강남-정자])</option><option value="RID241201000003">경기철도 (신분당선[정자-광교])</option><option value="RID241201000004">새서울철도 (신분당선[신사-강남])</option><option value="RID241201000005">전라선철도 (전라선[동익산-신리])</option><option value="RID241201000006">가야철도 (경전선[함안-군북])</option><option value="RID241201000007">이레일 (서해선[소사-원시])</option><option value="RID241201000008">서부광역철도 (서해선[대곡-부천종합운동장])</option><option value="RID241201000022">에스지레일 (GTX-A[운정중앙-서울])</option>
+    </select>
+    <label class="f" for="lNo">계정 번호</label>
+    <div class="ifield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><input class="in num" id="lNo" inputmode="numeric" pattern="[0-9]*" placeholder="예) 023" autocomplete="username" autocapitalize="off" maxlength="4"></div>
+    <label class="f" for="lPw">비밀번호</label>
+    <div class="ifield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><input class="in" id="lPw" type="password" autocomplete="current-password"></div>
+    <div class="lerr" id="lErr" role="alert"></div>
+    <button class="btn pri wide" id="lBtn" type="submit">로그인</button>
+    <p class="lhelp">비밀번호를 잊었거나 계정이 잠긴 경우 센터로 문의하시기 바랍니다. (<a href="tel:044-211-3383">044-211-3383</a>)</p>
+    <div class="linst" id="pwaInst" hidden>
+      <button class="btn wide" id="pwaBtn" type="button" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>앱 설치</button>
+      <p class="linst-t" id="pwaTip" hidden></p>
+    </div>
+  </div>
+  <div id="lgChg" hidden>
+    <div class="guide" style="margin:0 0 6px">임시 비밀번호로 로그인했습니다. 개인 비밀번호로 변경을 권장합니다.</div>
+    <label class="f" for="cPw1">새 비밀번호</label>
+    <input class="in" id="cPw1" type="password" autocomplete="new-password" placeholder="8~20자, 영문, 숫자, 특수문자 포함">
+    <label class="f" for="cPw2">새 비밀번호 확인</label>
+    <input class="in" id="cPw2" type="password" autocomplete="new-password">
+    <div class="lerr" id="cErr" role="alert"></div>
+    <button class="btn pri wide" id="cBtn" type="button">비밀번호 변경</button>
+    <button class="btn wide" id="cLater" type="button" style="margin-top:8px">다음에 변경</button>
+  </div>
+</form></div>
+</div>
+<footer class="sft"><div class="sft-in">
+  <p class="sft-nm">한국교통연구원 민자철도관리지원센터</p>
+  <p>(우)30147 세종특별자치시 시청대로 370 세종국책연구단지 과학인프라동(B)</p>
+  <p>평가단 문의 <a href="tel:044-211-3383">044-211-3383</a></p>
+  <p class="sft-cp">Copyright Korea Transport Institute. All rights reserved.</p>
+</div></footer>
+<div id="toast" role="status" aria-live="polite"></div>
+<script src="./resource/js/panelops.js"></script>
+<script src="./resource/js/fbapi.js"></script>
+<script src="./resource/panel/pwa.js"></script>
+<script>(function(){const $=id=>document.getElementById(id);let tmpPw="";const err=(el,m)=>{el.textContent=m};$("lForm").addEventListener("submit",(async ev=>{ev.preventDefault();if(!$("lgChg").hidden){$("cBtn").click();return}const org=$("lOrg").value,no=$("lNo").value.trim(),pw=$("lPw").value;["lOrg","lNo","lPw"].forEach((k=>$(k).classList.remove("err")));if(!org){$("lOrg").classList.add("err");err($("lErr"),"사업자를 선택하세요.");$("lOrg").focus();return}if(!/^\d{1,4}$/.test(no)){$("lNo").classList.add("err");err($("lErr"),"계정 번호를 숫자로 입력하세요. (예: 023)");$("lNo").focus();return}if(!pw){$("lPw").classList.add("err");err($("lErr"),"비밀번호를 입력하세요.");$("lPw").focus();return}$("lBtn").disabled=true;err($("lErr"),"");const r=await POPS.post("/ops/panel/login.json",{railwyid:org,no:no,pw:pw});$("lBtn").disabled=false;if(!r.ok){err($("lErr"),r.msg||"로그인하지 못했습니다.");$("lPw").value="";$("lPw").classList.add("err");$("lPw").focus();return}if(r.user&&r.user.must){tmpPw=pw;$("lgIn").hidden=true;$("lgChg").hidden=false;$("lSub").textContent=r.user.nm+" 비밀번호 변경";$("cPw1").focus();return}location.href="app.html"}));$("cBtn").addEventListener("click",(async()=>{const p1=$("cPw1").value,p2=$("cPw2").value;["cPw1","cPw2"].forEach((k=>$(k).classList.remove("err")));if(!p1){$("cPw1").classList.add("err");err($("cErr"),"새 비밀번호를 입력하세요.");$("cPw1").focus();return}if(p1!==p2){$("cPw2").classList.add("err");err($("cErr"),"새 비밀번호와 확인 입력이 다릅니다.");$("cPw2").focus();return}$("cBtn").disabled=true;err($("cErr"),"");const r=await POPS.post("/ops/panel/pw.json",{cur:tmpPw,pw:p1});$("cBtn").disabled=false;if(!r.ok){err($("cErr"),r.msg||"비밀번호를 바꾸지 못했습니다.");$("cPw1").classList.add("err");$("cPw1").focus();return}location.href="app.html"}));$("cLater").addEventListener("click",(()=>{location.href="app.html"}));$("lOrg").focus()})()</script>
+</body>
+</html>

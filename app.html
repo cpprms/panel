@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>현장체험평가단 | 민자철도 운영관리시스템</title>
+<link rel="icon" href="data:,">
+<meta name="theme-color" content="#ffffff">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="평가단">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="./resource/panel/manifest.json">
+<link rel="apple-touch-icon" href="./resource/panel/apple-touch-icon.png">
+<link rel="stylesheet" href="./resource/css/panelapp.css">
+<link rel="stylesheet" href="./resource/css/panelmedia.css">
+<link rel="stylesheet" href="./resource/css/fbtest.css">
+</head>
+<body class="has-phone">
+<div class="fbtest" role="note">시험용 화면 (운영 시스템과 별도 저장)</div>
+<header class="shd"><div class="shd-in"><img class="slogo" src="./resource/images/cppr_logo.svg" alt="민자철도관리지원센터" width="308" height="35"><span class="ssvc">현장체험평가단</span></div></header>
+<div id="app"><div class="phoneWrap"><div class="phone"><div class="pb"><div class="empty">자료를 불러오는 중입니다.</div></div></div></div></div>
+<footer class="sft"><div class="sft-in">
+  <p class="sft-nm">한국교통연구원 민자철도관리지원센터</p>
+  <p>(우)30147 세종특별자치시 시청대로 370 세종국책연구단지 과학인프라동(B)</p>
+  <p>평가단 문의 <a href="tel:044-211-3383">044-211-3383</a></p>
+  <p class="sft-cp">Copyright Korea Transport Institute. All rights reserved.</p>
+</div></footer>
+<div id="toast" role="status" aria-live="polite"></div>
+<script src="./resource/js/panelops.js"></script>
+<script src="./resource/js/fbapi.js"></script>
+<script>FBAPI.boot("panel","login.html").then((function(me){if(!me){location.replace("login.html");return}window.PANEL_ME=me;window.PANEL_LOGO="./resource/images/cppr_logo.svg";var s=document.createElement("script");s.src="./resource/js/panelapp.js";document.body.appendChild(s)}))</script>
+<script src="./resource/panel/pwa.js"></script>
+</body>
+</html>

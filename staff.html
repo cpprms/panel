@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>사업자 조치, 센터 로그인 | 민자철도 운영관리시스템</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="./resource/css/panelapp.css">
+<link rel="stylesheet" href="./resource/css/fbtest.css">
+</head>
+<body>
+<div class="fbtest" role="note">시험용 화면 (운영 시스템과 별도 저장)</div>
+<header class="shd"><div class="shd-in"><img class="slogo" src="./resource/images/cppr_logo.svg" alt="민자철도관리지원센터" width="308" height="35"><span class="ssvc">운영관리시스템</span></div></header>
+<div id="app">
+<div class="login"><form class="lcard" id="lForm" autocomplete="on">
+  <h1>사업자 조치, 센터 로그인</h1>
+  <div class="lsub">발급받은 아이디와 비밀번호로 로그인</div>
+  <label class="f" for="lId">아이디</label>
+  <div class="ifield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><input class="in" id="lId" autocomplete="username" autocapitalize="off" spellcheck="false"></div>
+  <label class="f" for="lPw">비밀번호</label>
+  <div class="ifield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><input class="in" id="lPw" type="password" autocomplete="current-password"></div>
+  <div class="lerr" id="lErr" role="alert"></div>
+  <button class="btn pri wide" id="lBtn" type="submit">로그인</button>
+  <p class="lhelp">현장체험평가단은 <a href="login.html">평가단 로그인 화면</a>을 사용하시기 바랍니다.</p>
+</form></div>
+</div>
+<footer class="sft"><div class="sft-in">
+  <p class="sft-nm">한국교통연구원 민자철도관리지원센터</p>
+  <p>(우)30147 세종특별자치시 시청대로 370 세종국책연구단지 과학인프라동(B)</p>
+  <p>평가단 문의 <a href="tel:044-211-3383">044-211-3383</a></p>
+  <p class="sft-cp">Copyright Korea Transport Institute. All rights reserved.</p>
+</div></footer>
+<script src="./resource/js/fbapi.js"></script>
+<script>(function(){const $=id=>document.getElementById(id);$("lForm").addEventListener("submit",(async ev=>{ev.preventDefault();["lId","lPw"].forEach((k=>$(k).classList.remove("err")));const id=$("lId").value.trim(),pw=$("lPw").value;if(!id){$("lId").classList.add("err");$("lErr").textContent="아이디를 입력하세요.";$("lId").focus();return}if(!pw){$("lPw").classList.add("err");$("lErr").textContent="비밀번호를 입력하세요.";$("lPw").focus();return}$("lBtn").disabled=true;$("lErr").textContent="";let r;try{r=await FBAPI.staffLogin(id,pw)}catch(e){r={ok:false,msg:"서버에 연결하지 못했습니다. 연결을 확인한 뒤 다시 시도해 주세요."}}$("lBtn").disabled=false;if(!r.ok){$("lErr").textContent=r.msg;$("lPw").value="";$("lPw").classList.add("err");$("lPw").focus();return}location.href=r.g==="center"?"center.html":"corp.html"}));$("lId").focus()})()</script>
+</body>
+</html>
